@@ -16,6 +16,18 @@ class m191122_160210_create_priority_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
         ]);
+        $this->insert('{{%priority}}', [
+            'id'    => 1,
+            'name'  => 'Низкий'
+        ]);
+        $this->insert('{{%priority}}', [
+            'id'    => 2,
+            'name'  => 'Средний'
+        ]);
+        $this->insert('{{%priority}}', [
+            'id'    => 3,
+            'name'  => 'Высокий'
+        ]);
     }
 
     /**

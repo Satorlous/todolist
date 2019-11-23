@@ -17,7 +17,6 @@ body {
 
 .logo {
     height: 40px;
-    vertical-align: middle;
 }
 
 .navbar-brand {
@@ -134,3 +133,9 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.tasks-table > tbody > tr {
+    cursor: pointer;
+}
+
+

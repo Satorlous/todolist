@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 use app\models\SignupForm;
+use app\models\Task;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -19,7 +21,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup', 'tasks'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -31,7 +33,15 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['tasks'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
+                'denyCallback' => function ($rule, $action) {
+                    return $this->redirect(Url::toRoute('site/index'));
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -102,7 +112,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect(Url::toRoute('site/tasks'));
         }
 
         $model->password = '';
@@ -121,5 +131,18 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionTasks()
+    {
+        $tasks = Task::find()->where(['responsible_id' => Yii::$app->user->id])->orderBy(['updated_at' => SORT_DESC])->all();
+        return $this->render('tasks', [
+            'tasks' => $tasks,
+        ]);
+    }
+
+    public function actionTest()
+    {
+
     }
 }

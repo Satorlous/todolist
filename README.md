@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://https://github.com/Satorlous/todolist" target="_blank">
+    <a href="https://github.com/Satorlous/todolist" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
     </a>
     <h1 align="center">ToDo-List Web Application</h1>

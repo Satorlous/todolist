@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Status;
 use yii\db\Migration;
 
 /**
@@ -16,6 +17,23 @@ class m191122_160201_create_status_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
         ]);
+        $this->insert('{{%status}}', [
+            'id'    => 1,
+            'name'  => 'К выполнению'
+        ]);
+        $this->insert('{{%status}}', [
+            'id'    => 2,
+            'name'  => 'Выполняется'
+        ]);
+        $this->insert('{{%status}}', [
+            'id'    => 3,
+            'name'  => 'Выполнена'
+        ]);
+        $this->insert('{{%status}}', [
+            'id'    => 4,
+            'name'  => 'Отменена'
+        ]);
+
     }
 
     /**

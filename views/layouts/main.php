@@ -43,6 +43,8 @@ AppAsset::register($this);
     }
     else
     {
+        $menuItems[] = ['label' => 'Задачи', 'url' => ['/site/tasks']];
+        $menuItems[] = ['label' => 'TestPage', 'url' => ['/site/test']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
@@ -61,11 +63,14 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget(); ?>
-
+        <div class="row">
+            <div class="col-lg-12">
+                <?= Breadcrumbs::widget([
+                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                ]) ?>
+                <?= Alert::widget(); ?>
+            </div>
+        </div>
         <?= $content ?>
     </div>
 </div>

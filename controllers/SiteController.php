@@ -133,9 +133,18 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionTasks()
+    public function actionTasks($sort_param = null)
     {
-        $tasks = Task::find()->where(['responsible_id' => Yii::$app->user->id])->orderBy(['updated_at' => SORT_DESC])->all();
+        $tasks = Task::find()->where(['responsible_id' => Yii::$app->user->id]);
+        if ($sort_param == null)
+            $tasks = $tasks->orderBy(['updated_at' => SORT_DESC])->all();
+        elseif ($sort_param == 'day')
+            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24])->all();
+        elseif ($sort_param == 'week')
+            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24*7])->all();
+        elseif ($sort_param == 'future')
+            $tasks = $tasks->andWhere(['>', 'expires_at', time() + 3600*24*7])->all();
+        //dd(time() + 3600*24*9);
         return $this->render('tasks', [
             'tasks' => $tasks,
         ]);

@@ -196,4 +196,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Task::class, ['chief_id' => 'id']);
     }
+
+    public function getFullname()
+    {
+        return trim($this->surname.' '.$this->name.' '.$this->patronymic);
+    }
 }

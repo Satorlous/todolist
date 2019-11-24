@@ -86,13 +86,10 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()))
+        if ($model->load(Yii::$app->request->post()) && $model->signup())
         {
-            if($model->signup())
-            {
-                Yii::$app->session->setFlash('success', 'Регистрация успешно завершена.');
-                return $this->goHome();
-            }
+            Yii::$app->session->setFlash('success', 'Регистрация успешно завершена.');
+            return $this->goHome();
         }
         return $this->render('signup', [
             'model' => $model,
@@ -112,7 +109,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(Url::toRoute('site/tasks'));
+            return $this->redirect(Url::toRoute(['site/tasks', 'type' => 'received']));
         }
 
         $model->password = '';
@@ -133,21 +130,53 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionTasks($sort_param = null)
+    public function actionTasks($sort_param = null, $type)
     {
-        $tasks = Task::find()->where(['responsible_id' => Yii::$app->user->id]);
+        $tasks = Task::find();
+        //filter by given $type
+        if($type == 'received')
+            $tasks= $tasks->where(['responsible_id' => Yii::$app->user->id]);
+        else if ($type == 'issued')
+            $tasks= $tasks->where(['chief_id' => Yii::$app->user->id]);
+
+          //filter by given $sort_param
         if ($sort_param == null)
-            $tasks = $tasks->orderBy(['updated_at' => SORT_DESC])->all();
+            $tasks = $tasks->orderBy(['updated_at' => SORT_DESC]);
         elseif ($sort_param == 'day')
-            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24])->all();
+            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24]);
         elseif ($sort_param == 'week')
-            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24*7])->all();
+            $tasks = $tasks->andWhere(['between', 'expires_at', time(), time() + 3600*24*7]);
         elseif ($sort_param == 'future')
-            $tasks = $tasks->andWhere(['>', 'expires_at', time() + 3600*24*7])->all();
-        //dd(time() + 3600*24*9);
+            $tasks = $tasks->andWhere(['>', 'expires_at', time() + 3600*24*7]);
+
         return $this->render('tasks', [
-            'tasks' => $tasks,
+            'tasks' => $tasks->all(),
         ]);
+    }
+
+    public function actionCreateUpdateTask($id = null)
+    {
+        $model = new Task();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $task = Task::findOne($id);
+            if($task->chief->id != Yii::$app->user->id)
+            {
+                $task->updated_at = time();
+                $task->status_id = $model->status_id;
+                $task->save();
+                Yii::$app->session->setFlash('success', 'Задача обновлена.');
+            }
+            else
+            {
+                $task->load(Yii::$app->request->post());
+                $task->updated_at = time();
+                $task->expires_at = Yii::$app->formatter->asTimestamp($task->expires_at);
+                $task->save();
+                Yii::$app->session->setFlash('success', 'Задача обновлена.');
+            }
+        }
+        return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
     }
 
     public function actionTest()

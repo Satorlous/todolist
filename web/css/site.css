@@ -146,7 +146,22 @@ a.desc:after {
     margin-bottom: 10px;
 }
 
-.sort-div__label {
-    width: 0;
+.modal-task-addon {
+    font-weight: bold;
+    min-width:135px;
+    text-align:left;
+}
+
+.modal-task-addon + textarea {
+    resize: vertical;
+}
+
+.float-right {
+    float: right;
+}
+
+.table-cell
+{
+    display: table;
 }
 

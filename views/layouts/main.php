@@ -21,6 +21,7 @@ AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
+    <link rel="shortcut icon" href="<?=Yii::getAlias('@web/img/icon.png')?>" type="image/x-icon" />
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
@@ -43,8 +44,11 @@ AppAsset::register($this);
     }
     else
     {
-        $menuItems[] = ['label' => 'Задачи', 'url' => ['/site/tasks']];
-        $menuItems[] = ['label' => 'TestPage', 'url' => ['/site/test']];
+        $menuItems[] = ['label' => 'Добавить задачу', 'url' => Url::toRoute(['site/new-task'])];
+        $menuItems[] = ['label' => 'Задачи', 'items' => [
+            ['label' => 'Выданные', 'url' => Url::toRoute(['site/tasks', 'type'=>'issued'])],
+            ['label' => 'Полученные', 'url' => Url::toRoute(['site/tasks', 'type'=>'received'])],
+        ]];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

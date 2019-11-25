@@ -6,6 +6,7 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'language' => 'ru',
     'id' => 'basic',
+    'timeZone' => 'Asia/Yekaterinburg',
     'name' => 'To-Do-List',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -15,7 +16,6 @@ $config = [
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'uXs4Up9qQVSmKTRL73mjoZfYyWZHd0Yz',
         ],
         'cache' => [

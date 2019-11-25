@@ -3,7 +3,6 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use app\models\User;
 
 /**
  * Signup form
@@ -58,7 +57,7 @@ class SignupForm extends Model
             return null;
         }
         
-        $user = new \app\models\User();
+        $user = new User();
         $user->surname = $this->surname;
         $user->name = $this->name;
         $user->patronymic = $this->patronymic;

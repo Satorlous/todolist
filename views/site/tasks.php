@@ -12,6 +12,8 @@ use app\models\Responsible;
 use app\models\Status;
 use app\models\Task;
 use app\models\User;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
@@ -46,7 +48,7 @@ use yii\helpers\Url;
                             <th scope="col">Заголовок</th>
                             <th scope="col">Приоритет</th>
                             <th scope="col">Дата окончания</th>
-                            <!--<th scope="col">Ответственный</th>-->
+                            <?if($type == 'issued'):?><th scope="col">Ответственный</th><?endif;?>
                             <th scope="col">Статус</th>
                         </tr>
                     </thead>
@@ -55,7 +57,7 @@ use yii\helpers\Url;
                         <!--#region TASK ROW-->
                         <tr data-toggle="modal" data-target="#modal-task-<?=$task->id?>"
                             <?
-                            if($task->expires_at < time() && $task->status->id != 3)
+                            if($task->expires_at+3600*24 < time() && $task->status->id != 3) //добавление 3600*24 для включения суток на выполенине задачи (задача заканчивается не в начале суток, а в коцне)
                                 echo "class='danger'";
                             elseif($task->status->id === 3)
                                 echo "class='success'";
@@ -67,9 +69,9 @@ use yii\helpers\Url;
                             <td><?=$task->header?></td>
                             <td><?=$task->priority->name?></td>
                             <td><?=Yii::$app->formatter->asDate($task->expires_at, 'dd.MM.yyyy')?></td>
+                            <?if($type == 'issued'):?><td><?=$task->responsible->getFullName()?></td><?endif;?>
                             <td><?=$task->status->name?></td>
-                            <!--#endregion-->
-                        <!--#region EDIT MODAL WINDOW-->
+                            <!--#region EDIT MODAL WINDOW-->
                             <div class="modal fade" id="modal-task-<?=$task->id?>" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -143,8 +145,9 @@ use yii\helpers\Url;
                                     </div>
                                 </div>
                             </div>
-                            <!--#endregion-->
+                            <!--#endregion EDIT MODAL WINDOW-->
                         </tr>
+                        <!--#endregion TASK ROW-->
                     <?$i++; endforeach;?>
                     <tr><!--#region CREATE MODAL WINDOW-->
                         <div class="table-cell">
@@ -157,57 +160,34 @@ use yii\helpers\Url;
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form class="form-horizontal" action="<?=Url::toRoute(['site/create-update-task'])?>" method="post">
+<!--                                        <form class="" action="--><?//=Url::toRoute(['site/create-task'])?><!--" method="post">-->
+                                        <?php $form = ActiveForm::begin([
+                                            'id' => 'form-task-new',
+                                            'layout' => 'horizontal',
+                                            'fieldConfig' => [
+                                                'template' => '<div class="input-group">
+                                                                <div class="input-group-addon modal-task-addon">{label}</div>{input}
+                                                            </div><div class="col-xs-12">{error}</div>',
+                                                'labelOptions' => ['class' => 'nomargin'],
+                                            ],
+                                        ]); ?>
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     <div class="modal-body">
-                                                        <?=Html::hiddenInput(Yii::$app->getRequest()->csrfParam, Yii::$app->getRequest()->getCsrfToken(), []);?>
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">Заголовок</div>
-                                                                <input type="text" name="Task[header]" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">Описание</div>
-                                                                <textarea type="text" name="Task[description]" class="form-control"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">Приоритет</div>
-                                                                <select class="form-control" name="Task[priority_id]">
-                                                                    <?foreach(Priority::find()->all() as $priority):?>
-                                                                        <option value="<?=$priority->id?>"><?=$priority->name?></option>
-                                                                    <?endforeach;?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">Ответственный</div>
-                                                                <select type="text" name="Task[responsible_id]" class="form-control">
-                                                                    <?foreach(Responsible::find()->where(['chief_id' => Yii::$app->user->id])->all() as $responsible):?>
-                                                                        <option value="<?=$responsible->user->id?>"><?=$responsible->user->getFullName()?></option>
-                                                                    <?endforeach;?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
+                                                        <?= $form->field($model, 'header')->label('Заголовок')?>
+
+                                                        <?= $form->field($model, 'description')->textarea(['rows' => '2'])->label('Описание') ?>
+
+                                                        <?= $form->field($model, 'priority_id')->dropDownList(
+                                                            ArrayHelper::map(Priority::find()->all(), 'id', 'name'), ['prompt' => 'Выберите приоритет'])->label('Приоритет')
+                                                        ?>
+                                                        <?= $form->field($model, 'responsible_id')->dropDownList(
+                                                            ArrayHelper::map(Responsible::find()->where(['chief_id' => Yii::$app->user->id])->all(), 'userId', 'userName'), ['prompt' => 'Выберите ответственного'])->label('Ответственный')
+                                                        ?>
+                                                        <div class="form-group field-taskform-expires_at required">
                                                             <div class="input-group">
                                                                 <div class="input-group-addon modal-task-addon">Дата окончания</div>
-                                                                <input type="date" name="Task[expires_at]" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">Статус</div>
-                                                                <select  class="form-control" name="Task[status_id]">
-                                                                    <?foreach(Status::find()->all() as $status):?>
-                                                                        <option value="<?=$status->id?>"><?=$status->name?></option>
-                                                                    <?endforeach;?>
-                                                                </select>
+                                                                <input id="taskform-expires_at" type="date" name="TaskForm[expires_at]" class="form-control" min="<?=Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd')?>">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -217,12 +197,12 @@ use yii\helpers\Url;
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
                                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                             </div>
-                                        </form>
+                                        <?php ActiveForm::end(); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--#endregion--></tr>
+                        <!--#endregion CREATE MODAL WINDOW--></tr>
                     </tbody>
                 </table>
             </div>

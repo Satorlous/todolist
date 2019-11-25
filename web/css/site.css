@@ -165,3 +165,7 @@ a.desc:after {
     display: table;
 }
 
+.nomargin {
+    margin: 0;
+}
+

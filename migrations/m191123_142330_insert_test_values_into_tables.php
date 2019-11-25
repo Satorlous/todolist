@@ -15,81 +15,65 @@ class m191123_142330_insert_test_values_into_tables extends Migration
      */
     public function safeUp()
     {
-        $this->insert('{{%task}}', [
-            'id'                => 1,
-            'header'            => 'Lorem ipsum dolor',
-            'description'       => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.',
-            'priority_id'       => 1,
-            'status_id'         => 1,
-            'responsible_id'    => 2,
-            'chief_id'          => 1,
-            'created_at'        => time(),
-            'updated_at'        => time(),
-            'expires_at'        => Yii::$app->formatter->asTimestamp('27.11.2019'),
-        ]);
+        $task = new Task();
+        $task->header = 'Lorem ipsum dolor';
+        $task->description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.';
+        $task->priority_id = 1;
+        $task->status_id = 1;
+        $task->responsible_id = 2;
+        $task->chief_id = 1;
+        $task->expires_at = Yii::$app->formatter->asTimestamp('27.11.2019');
+        $task->save();
 
-        $this->insert('{{%task}}', [
-            'id'                => 2,
-            'header'            => 'Lorem ipsum dolor',
-            'description'       => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.',
-            'priority_id'       => 2,
-            'status_id'         => 2,
-            'responsible_id'    => 2,
-            'chief_id'          => 1,
-            'created_at'        => time(),
-            'updated_at'        => time(),
-            'expires_at'        => Yii::$app->formatter->asTimestamp('01.12.2019'),
-        ]);
+        $task = new Task();
+        $task->header = 'Lorem ipsum dolor';
+        $task->description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.';
+        $task->priority_id = 2;
+        $task->status_id = 2;
+        $task->responsible_id = 2;
+        $task->chief_id = 1;
+        $task->expires_at = Yii::$app->formatter->asTimestamp('01.12.2019');
+        $task->save();
 
-        $this->insert('{{%task}}', [
-            'id'                => 4,
-            'header'            => 'Lorem ipsum dolor',
-            'description'       => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.',
-            'priority_id'       => 3,
-            'status_id'         => 3,
-            'responsible_id'    => 3,
-            'chief_id'          => 2,
-            'created_at'        => time()-3600*24*2,
-            'updated_at'        => time()-3600*24,
-            'expires_at'        => Yii::$app->formatter->asTimestamp('27.11.2019'),
-        ]);
+        $task = new Task();
+        $task->header = 'Lorem ipsum dolor';
+        $task->description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.';
+        $task->priority_id = 3;
+        $task->status_id = 3;
+        $task->responsible_id = 3;
+        $task->chief_id = 2;
+        $task->expires_at = Yii::$app->formatter->asTimestamp('27.11.2019');
+        $task->save();
 
-        $this->insert('{{%task}}', [
-            'id'                => 5,
-            'header'            => 'Lorem ipsum dolor',
-            'description'       => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.',
-            'priority_id'       => 3,
-            'status_id'         => 4,
-            'responsible_id'    => 3,
-            'chief_id'          => 2,
-            'created_at'        => time()-3600*24,
-            'updated_at'        => time()-3600*25,
-            'expires_at'        => Yii::$app->formatter->asTimestamp('27.11.2019'),
-        ]);
+        $task = new Task();
+        $task->header = 'Lorem ipsum dolor';
+        $task->description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.';
+        $task->priority_id = 3;
+        $task->status_id = 4;
+        $task->responsible_id = 3;
+        $task->chief_id = 2;
+        $task->expires_at = Yii::$app->formatter->asTimestamp('28.11.2019');
+        $task->save();
 
-        $this->insert('{{%task}}', [
-            'id'                => 3,
-            'header'            => 'Lorem ipsum dolor',
-            'description'       => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.',
-            'priority_id'       => 3,
-            'status_id'         => 3,
-            'responsible_id'    => 2,
-            'chief_id'          => 1,
-            'created_at'        => time(),
-            'updated_at'        => time()+3600*2,
-            'expires_at'        => Yii::$app->formatter->asTimestamp('27.11.2019'),
-        ]);
+        $task = new Task();
+        $task->header = 'Lorem ipsum dolor';
+        $task->description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, repudiandae.';
+        $task->priority_id = 3;
+        $task->status_id = 3;
+        $task->responsible_id = 2;
+        $task->chief_id = 1;
+        $task->expires_at = Yii::$app->formatter->asTimestamp('24.11.2019');
+        $task->save();
 
-        $this->insert('{{%responsible}}', [
-            'id'                => 1,
-            'chief_id'          => 1,
-            'user_id'           => 2,
-        ]);
-        $this->insert('{{%responsible}}', [
-            'id'                => 2,
-            'chief_id'          => 2,
-            'user_id'           => 3,
-        ]);
+        $responsible = new Responsible();
+        $responsible->chief_id = 1;
+        $responsible->user_id = 2;
+        $responsible->save();
+
+        $responsible = new Responsible();
+        $responsible->chief_id = 2;
+        $responsible->user_id = 3;
+        $responsible->save();
     }
 
     /**
@@ -97,7 +81,7 @@ class m191123_142330_insert_test_values_into_tables extends Migration
      */
     public function safeDown()
     {
-        Task::deleteAll(['id' => [1,2,3,]]);
+        Task::deleteAll(['id' => [1,2,3,4,5]]);
         Responsible::deleteAll(['id' => [1,2]]);
     }
 }

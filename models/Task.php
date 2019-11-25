@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "task".
@@ -33,15 +34,21 @@ class Task extends \yii\db\ActiveRecord
         return 'task';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['header', 'description', 'priority_id', 'status_id', 'responsible_id', 'chief_id', 'created_at', 'updated_at', 'expires_at'], 'required'],
-            [['priority_id', 'status_id', 'responsible_id', 'chief_id', 'created_at', 'updated_at', 'expires_at'], 'default', 'value' => null],
-            [['priority_id', 'status_id', 'responsible_id', 'chief_id', 'created_at', 'updated_at', 'expires_at'], 'integer'],
+            [['header', 'description', 'priority_id', 'status_id', 'responsible_id', 'chief_id', 'expires_at'], 'required'],
+            [['priority_id', 'responsible_id', 'chief_id', 'expires_at'], 'default', 'value' => null],
             [['header', 'description'], 'string', 'max' => 255],
             [['priority_id'], 'exist', 'skipOnError' => true, 'targetClass' => Priority::class, 'targetAttribute' => ['priority_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => Status::class, 'targetAttribute' => ['status_id' => 'id']],

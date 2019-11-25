@@ -17,23 +17,22 @@ class m191122_160201_create_status_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
         ]);
-        $this->insert('{{%status}}', [
-            'id'    => 1,
-            'name'  => 'К выполнению'
-        ]);
-        $this->insert('{{%status}}', [
-            'id'    => 2,
-            'name'  => 'Выполняется'
-        ]);
-        $this->insert('{{%status}}', [
-            'id'    => 3,
-            'name'  => 'Выполнена'
-        ]);
-        $this->insert('{{%status}}', [
-            'id'    => 4,
-            'name'  => 'Отменена'
-        ]);
 
+        $model = new Status();
+        $model->name = 'К выполнению';
+        $model->save();
+
+        $model = new Status();
+        $model->name = 'Выполняется';
+        $model->save();
+
+        $model = new Status();
+        $model->name = 'Выполнена';
+        $model->save();
+
+        $model = new Status();
+        $model->name = 'Отменена';
+        $model->save();
     }
 
     /**

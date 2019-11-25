@@ -65,4 +65,14 @@ class Responsible extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'chief_id']);
     }
+
+    public function getUserId()
+    {
+        return $this->user->id;
+    }
+
+    public function getUserName()
+    {
+        return $this->user->getFullname();
+    }
 }

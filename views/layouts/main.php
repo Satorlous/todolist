@@ -44,7 +44,7 @@ AppAsset::register($this);
     }
     else
     {
-        $menuItems[] = ['label' => 'Добавить задачу', 'url' => Url::toRoute(['site/new-task'])];
+        $menuItems[] = ['label' => 'Ответственные', 'url' => ['/site/responsibles']];
         $menuItems[] = ['label' => 'Задачи', 'items' => [
             ['label' => 'Выданные', 'url' => Url::toRoute(['site/tasks', 'type'=>'issued'])],
             ['label' => 'Полученные', 'url' => Url::toRoute(['site/tasks', 'type'=>'received'])],

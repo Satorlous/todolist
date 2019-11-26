@@ -4,7 +4,7 @@
 
 $type = Yii::$app->request->get('type');
 $sort_param = Yii::$app->request->get('sort_param');
-$this->title = $type == 'received' ? 'Полученные задачи' : 'Выданные задачи';
+$this->title = $type == 'received' ? 'Полученные задачи' : $type == 'issued' ? 'Выданные задачи' : 'Задачи';
 $this->params['breadcrumbs'][] = $this->title;
 
 use app\models\Priority;
@@ -20,6 +20,7 @@ use yii\helpers\Url;
 
 <div class="site-tasks">
     <h2><?=$this->title?></h2>
+    <!--#region Sort Buttons Block-->
     <div class="sort-div">
         <div class="row">
             <div class="col-xs-6">
@@ -33,13 +34,15 @@ use yii\helpers\Url;
                     </div>
                 </div>
             </div>
-            <div class="col-xs-6">
+            <div class="col-sm-6 col-xs-12">
                 <button class="btn btn-success float-right" data-toggle="modal" data-target="#modal-task-create"><span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Новая задача</button>
             </div>
         </div>
     </div>
+    <!--#endregion Sort Buttons Block-->
     <div class="row">
         <div class="col-lg-12">
+            <!--#region Task Table-->
             <div class="table-div">
                 <table class="table table-hover table-responsive-sm tasks-table">
                     <thead>
@@ -69,7 +72,7 @@ use yii\helpers\Url;
                             <td><?=$task->header?></td>
                             <td><?=$task->priority->name?></td>
                             <td><?=Yii::$app->formatter->asDate($task->expires_at, 'dd.MM.yyyy')?></td>
-                            <?if($type == 'issued'):?><td><?=$task->responsible->getFullName()?></td><?endif;?>
+                            <?if($type == 'issued'):?><td><?=$task->responsible->fullName?></td><?endif;?>
                             <td><?=$task->status->name?></td>
                             <!--#region EDIT MODAL WINDOW-->
                             <div class="modal fade" id="modal-task-<?=$task->id?>" tabindex="-1" role="dialog" aria-hidden="true">
@@ -81,7 +84,7 @@ use yii\helpers\Url;
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form class="form-horizontal" action="<?=Url::toRoute(['site/create-update-task', 'id'=>$task->id])?>" method="post">
+                                        <form class="form-horizontal" action="<?=Url::toRoute(['site/update-task', 'id'=>$task->id])?>" method="post">
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <div class="col-xs-12">
@@ -113,7 +116,7 @@ use yii\helpers\Url;
                                                                 <div class="input-group-addon modal-task-addon">Ответственный</div>
                                                                 <select type="text" name="Task[responsible_id]" class="form-control" <?=$task->setDisabledInputIfNotChief()?>>
                                                                     <?foreach(Responsible::find()->where(['chief_id' => Yii::$app->user->id])->all() as $responsible):?>
-                                                                        <option value="<?=$responsible->user->id?>" <?if($responsible->user->id == $task->responsible->id) echo 'selected';?>><?=$responsible->user->getFullName()?></option>
+                                                                        <option value="<?=$responsible->user->id?>" <?if($responsible->user->id == $task->responsible->id) echo 'selected';?>><?=$responsible->user->fullName?></option>
                                                                     <?endforeach;?>
                                                                 </select>
                                                             </div>
@@ -160,17 +163,16 @@ use yii\helpers\Url;
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-<!--                                        <form class="" action="--><?//=Url::toRoute(['site/create-task'])?><!--" method="post">-->
+
                                         <?php $form = ActiveForm::begin([
                                             'id' => 'form-task-new',
                                             'layout' => 'horizontal',
                                             'fieldConfig' => [
-                                                'template' => '<div class="input-group">
-                                                                <div class="input-group-addon modal-task-addon">{label}</div>{input}
-                                                            </div><div class="col-xs-12">{error}</div>',
+                                                'template' => '<div class="input-group"><div class="input-group-addon modal-task-addon">{label}</div>{input}</div><div class="col-xs-12">{error}</div>',
                                                 'labelOptions' => ['class' => 'nomargin'],
                                             ],
-                                        ]); ?>
+                                        ]);
+                                        ?>
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     <div class="modal-body">
@@ -206,6 +208,7 @@ use yii\helpers\Url;
                     </tbody>
                 </table>
             </div>
+            <!--#endregion Task Table-->
         </div>
     </div>
 </div>

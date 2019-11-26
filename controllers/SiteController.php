@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\models\SignupForm;
 use app\models\Task;
 use app\models\TaskForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -150,7 +151,7 @@ class SiteController extends Controller
             $tasks = $tasks->andWhere(['>', 'expires_at', time() + 3600*24*7]);
         $tasks = $tasks->orderBy(['updated_at' => SORT_DESC]);
         #endregion
-        #region TaskModel
+        #region TaskModal
         $model = new TaskForm();
         if ($model->load(Yii::$app->request->post()) && $model->create())
         {
@@ -164,7 +165,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionCreateUpdateTask($id = null)
+    public function actionUpdateTask($id = null)
     {
         $model = new Task();
         if($model->load(Yii::$app->request->post()))
@@ -189,13 +190,11 @@ class SiteController extends Controller
         return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
     }
 
-    public function actionCreateTask()
+    public function actionResponsibles()
     {
-
-    }
-
-    public function actionTest()
-    {
-
+        $responsibles = User::findOne(Yii::$app->user->id)->responsibles;
+        return $this->render('responsibles', [
+            'responsibles' => $responsibles,
+        ]);
     }
 }

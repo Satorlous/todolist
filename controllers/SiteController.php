@@ -1,12 +1,14 @@
 <?php
 
 namespace app\controllers;
+use app\models\Responsible;
 use app\models\SignupForm;
 use app\models\Task;
 use app\models\TaskForm;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
@@ -193,8 +195,40 @@ class SiteController extends Controller
     public function actionResponsibles()
     {
         $responsibles = User::findOne(Yii::$app->user->id)->responsibles;
+        $chief = User::findOne(Yii::$app->user->id)->chief;
+        $freeUsers = User::find()->where(['<>','id', Yii::$app->user->id]);
+        $busyUserIds = ArrayHelper::getColumn(Responsible::find()->all(), 'user_id');
+        if($chief != null)
+            $freeUsers = $freeUsers->andWhere(['<>','id', $chief->id]);
+        if (!empty($busyUserIds))
+            $freeUsers = $freeUsers->andWhere(['not in','id', $busyUserIds]);
+        $freeUsers = $freeUsers->all();
         return $this->render('responsibles', [
             'responsibles' => $responsibles,
+            'freeUsers' => $freeUsers,
         ]);
+    }
+
+    public function actionAddResponsible($id)
+    {
+        $responsible = new Responsible();
+        $responsible->chief_id = Yii::$app->user->id;
+        $responsible->user_id = $id;
+        if($responsible->save())
+        {
+            Yii::$app->session->setFlash('success', 'Подчиненный успешно добавлен.');
+        }
+        return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
+    }
+
+    public function actionRemoveResponsible($id)
+    {
+        $responsible = Responsible::findOne($id);
+        if ($responsible->delete())
+        {
+            Yii::$app->session->setFlash('success', 'Подчиненный успешно удален.');
+        }
+        return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
+
     }
 }

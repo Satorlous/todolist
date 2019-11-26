@@ -1,24 +1,30 @@
 <p align="center">
     <a href="https://github.com/Satorlous/todolist" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
+        <img src="https://raw.githubusercontent.com/Satorlous/todolist/master/web/img/icon.png" height="100px">
     </a>
-    <h1 align="center">ToDo-List Web Application</h1>
+    <h1 align="center">ToDoList Web Application</h1>
     <br>
 </p>
 
-DIRECTORY STRUCTURE
+ПЕРВОНАЧАЛЬНАЯ НАСТРОЙКА
 -------------------
-      assets/             contains assets definition
-      commands/           contains console commands (controllers)
-      config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
-      web/                contains the entry script and Web resources
-REQUIREMENTS
-------------
-The minimum requirement by this project template that your Web server supports PHP 5.4.0.
+
+**После клонирования:**
+1. Выполнить команду
+```
+php composer.phar install
+```
+
+2. Создать пустую базу данных с именем `todoapp`;
+
+3. Настроить конфигурацию файла `/config/db.php` в соответствии с настройками вашей СУБД;
+
+4. Выполнить команду
+```
+yii migrate
+```
+
+>После миграции структуры БД в таблицах уже будут некоторые тестовые данные.
+
+Уже имеются пользователи `user1`, `user2`, `user3` с паролем `123123`.
+У этих пользователей уже имеются некоторые задачи.

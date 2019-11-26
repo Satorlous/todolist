@@ -160,12 +160,18 @@ a.desc:after {
     float: right;
 }
 
-.table-cell
-{
-    display: table;
-}
-
 .nomargin {
     margin: 0;
 }
 
+.purple {
+    background-color: rgba(101,60,255,0.49);
+}
+
+.lead a:hover{
+    text-decoration: none;
+}
+
+.jumbotron h2 span{
+    font-weight: 400;
+}

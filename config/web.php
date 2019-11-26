@@ -50,6 +50,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/responsibles' => 'site/responsibles',
                 '/tasks/' => 'site/tasks',
                 '/' => 'site/index',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',

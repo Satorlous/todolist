@@ -4,7 +4,7 @@
 
 $type = Yii::$app->request->get('type');
 $sort_param = Yii::$app->request->get('sort_param');
-$this->title = $type == 'received' ? 'Полученные задачи' : $type == 'issued' ? 'Выданные задачи' : 'Задачи';
+$this->title = $type == 'received' ? 'Полученные задачи' : 'Выданные задачи';
 $this->params['breadcrumbs'][] = $this->title;
 
 use app\models\Priority;
@@ -46,7 +46,7 @@ use yii\helpers\Url;
             <div class="table-div">
                 <table class="table table-hover table-responsive-sm tasks-table">
                     <thead>
-                        <tr class="info">
+                        <tr class="purple">
                             <th scope="col">#</th>
                             <th scope="col">Заголовок</th>
                             <th scope="col">Приоритет</th>
@@ -111,6 +111,7 @@ use yii\helpers\Url;
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                        <?if($type == 'issued'):?>
                                                         <div class="form-group">
                                                             <div class="input-group">
                                                                 <div class="input-group-addon modal-task-addon">Ответственный</div>
@@ -121,6 +122,7 @@ use yii\helpers\Url;
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                        <?endif;?>
                                                         <div class="form-group">
                                                             <div class="input-group">
                                                                 <div class="input-group-addon modal-task-addon">Дата окончания</div>

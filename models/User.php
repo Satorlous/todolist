@@ -202,6 +202,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Responsible::class, ['chief_id' => 'id']);
     }
 
+    public function getChief()
+    {
+        return Responsible::findOne(['user_id' => self::getId()])->chief;
+    }
+
     public function getFullname()
     {
         return trim($this->surname.' '.$this->name.' '.$this->patronymic);

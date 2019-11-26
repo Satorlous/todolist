@@ -21,6 +21,7 @@ class m191123_140219_create_users_accounts extends Migration
         $model->email = 'user1@mail.ru';
         $model->generateAuthKey();
         $model->setPassword('123123');
+        $model->generateEmailVerificationToken();
         $model->generatePasswordResetToken();
         $model->save();
 
@@ -32,6 +33,7 @@ class m191123_140219_create_users_accounts extends Migration
         $model->email = 'user2@mail.ru';
         $model->generateAuthKey();
         $model->setPassword('123123');
+        $model->generateEmailVerificationToken();
         $model->generatePasswordResetToken();
         $model->save();
 
@@ -43,6 +45,19 @@ class m191123_140219_create_users_accounts extends Migration
         $model->email = 'user3@mail.ru';
         $model->generateAuthKey();
         $model->setPassword('123123');
+        $model->generateEmailVerificationToken();
+        $model->generatePasswordResetToken();
+        $model->save();
+
+        $model = new User();
+        $model->username = 'user4';
+        $model->surname = 'Леппик';
+        $model->name = 'Никита';
+        $model->patronymic = 'Олегович';
+        $model->email = 'user4@mail.ru';
+        $model->generateAuthKey();
+        $model->setPassword('123123');
+        $model->generateEmailVerificationToken();
         $model->generatePasswordResetToken();
         $model->save();
     }
@@ -52,6 +67,6 @@ class m191123_140219_create_users_accounts extends Migration
      */
     public function safeDown()
     {
-        User::deleteAll(['id' => [1,2,3]]);
+        User::deleteAll(['id' => [1,2,3,4]]);
     }
 }
